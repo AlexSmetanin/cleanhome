@@ -111,6 +111,81 @@ public class ProductsController {
         }
 
         return "products/editProduct";
+    }
 
+    @PostMapping("/edit")
+    public String updateProduct(
+            Model model,
+            @RequestParam int id,
+            @Valid @ModelAttribute ProductDto productDto,
+            BindingResult result
+    ) {
+
+        try {
+            Product product = productsRepository.findById((long) id).get();
+            model.addAttribute("product", product);
+
+            if (result.hasErrors()) {
+                return "products/editProduct";
+            }
+
+            if (!productDto.getImageFile().isEmpty()) {
+                // видалити старе зображення
+                String uploadDir= "public/images";
+                Path oldImagePath = Paths.get(uploadDir + product.getImageFileName());
+
+                try {
+                    Files.delete(oldImagePath);
+                } catch (Exception ex) {
+                    System.out.println("Exception:" + ex.getMessage());
+                }
+
+                // зберегти новий файл зображення
+                MultipartFile image = productDto.getImageFile();
+                Date updateAt = new Date();
+                String storageFileName = updateAt.getTime() + "_" + image.getOriginalFilename();
+
+                try (InputStream inputStream = image.getInputStream()) {
+                    Files.copy(inputStream, Paths.get(uploadDir+storageFileName),
+                            StandardCopyOption.REPLACE_EXISTING);
+                }
+                product.setImageFileName(storageFileName);
+            }
+            product.setProductName(productDto.getProductName());
+            product.setBrand(productDto.getBrand());
+            product.setCategory(productDto.getCategory());
+            product.setPrice(productDto.getPrice());
+            product.setQuantity(productDto.getQuantity());
+            product.setDescription(productDto.getDescription());
+            productsRepository.save(product);
+        }
+        catch (Exception ex) {
+            System.out.println("Exception:" + ex.getMessage());
+        }
+
+        return "redirect:/products";
+    }
+
+    @GetMapping("/delete")
+    public String deleteProduct(
+            @RequestParam int id
+    ) {
+        try {
+            Product product = productsRepository.findById((long) id).get();
+            // вилучення зображення товару
+            Path imagePath = Paths.get("public/images/" + product.getImageFileName());
+            try {
+                Files.delete(imagePath);
+            } catch (Exception ex) {
+                System.out.println("Exception:" + ex.getMessage());
+            }
+
+            // вилучення товару
+            productsRepository.delete(product);
+
+        } catch (Exception ex) {
+            System.out.println("Exception:" + ex.getMessage());
+        }
+        return "redirect:/products";
     }
 }
