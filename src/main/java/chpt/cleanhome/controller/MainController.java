@@ -16,7 +16,7 @@ public class MainController {
     @Autowired
     private ProductsRepository productsRepository;
 
-    @GetMapping("/main")
+    @GetMapping("/")
     public String home(Model model) {
         List<Product> products = productsRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         model.addAttribute("products", products);
