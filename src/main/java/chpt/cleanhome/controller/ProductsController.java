@@ -20,27 +20,27 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/products")
+//@RequestMapping("/products")
 public class ProductsController {
 
     @Autowired
     private ProductsRepository productsRepository;
 
-    @GetMapping({"","/"})
+    @GetMapping({"/products"})
     public String showProductsList(Model model) {
         List<Product> products = productsRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         model.addAttribute("products", products);
         return "products/products";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/products/create")
     public String showCreateProductForm(Model model) {
         ProductDto productDto = new ProductDto();
         model.addAttribute("productDto", productDto);
         return "products/createProduct";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/products/create")
     public String createProduct(
             @Valid @ModelAttribute ProductDto productDto,
             BindingResult result) {
@@ -87,7 +87,7 @@ public class ProductsController {
         return "redirect:/products";
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/products/edit")
     public String showEditProductForm(
             Model model,
             @RequestParam int id) {
@@ -113,7 +113,7 @@ public class ProductsController {
         return "products/editProduct";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/products/edit")
     public String updateProduct(
             Model model,
             @RequestParam int id,
@@ -166,7 +166,7 @@ public class ProductsController {
         return "redirect:/products";
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/products/delete")
     public String deleteProduct(
             @RequestParam int id
     ) {
@@ -188,4 +188,21 @@ public class ProductsController {
         }
         return "redirect:/products";
     }
+
+    @GetMapping("/products/details")
+    public String showProductDetailForm(
+            Model model,
+            @RequestParam int id) {
+        try {
+            Product product = productsRepository.findById((long) id).get();
+            model.addAttribute("product", product);
+        }
+        catch (Exception ex) {
+            System.out.println("Exception:" + ex.getMessage());
+            return "main";
+        }
+
+        return "products/productDetails";
+    }
+
 }

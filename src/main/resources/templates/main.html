@@ -240,15 +240,17 @@
                                     class="d-flex justify-content-between align-items-center"
                             >
                                 <div class="btn-group">
-                                    <button
+                                    <a
                                             type="button"
                                             class="btn btn-sm btn-outline-secondary"
+                                            th:href="@{/products/details(id=${product.id})}"
                                     >
                                         Детальніше
-                                    </button>
+                                    </a>
                                     <button
                                             type="button"
                                             class="btn btn-sm btn-outline-success"
+                                            th:href="@{/addToCart(id=${product.id})}"
                                     >
                                         До кошика
                                     </button>
@@ -275,7 +277,7 @@
                     <div class="row mt-4">
                         <!--Grid column-->
                         <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-                            <h5 class="text-uppercase mb-4">Про коледж</h5>
+                            <h5 class="text-uppercase mb-4">Про нас</h5>
 
                             <p>
                                 ЧПФК – один з небагатьох закладів освіти з підготовки молодших фахових бакалаврів технічного профілю, що випустив близько 25000 спеціалістів: техніків-електриків, будівельників, технологів машинобудування, механіків, електромеханіків, гідротехніків, економістів і програмістів.
