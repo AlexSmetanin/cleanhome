@@ -252,7 +252,8 @@
                                     <button
                                             type="button"
                                             class="btn btn-sm btn-outline-success"
-                                            th:href="@{/addToCart(id=${product.id})}"
+                                            th:href="@{/orders/addToCart(id=${product.id})}"
+                                            id = "add"
                                     >
                                         До кошика
                                     </button>
@@ -373,5 +374,13 @@
 </main>
 <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script type="text/javascript">
+    // Получаем элемент
+    const element = document.getElementById('add');
+    // Добавляем обработку события
+    element.onclick = (event) => {
+        alert("Товар додано до кошика!");
+    };
+</script>
 </body>
 </html>
